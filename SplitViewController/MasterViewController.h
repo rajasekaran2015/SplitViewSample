@@ -11,8 +11,7 @@
 @class DetailViewController;
 
 @interface MasterViewController : UITableViewController
-@property (nonatomic, retain) NSArray *siteNames;
-@property (nonatomic, retain) NSArray *siteAddresses;
+@property (nonatomic, strong) NSMutableArray *patientList;
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
 

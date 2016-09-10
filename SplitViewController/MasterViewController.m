@@ -8,10 +8,15 @@
 
 #import "MasterViewController.h"
 #import "DetailViewController.h"
+#import "PatientDetails.h"
 
 @interface MasterViewController ()
+{
+    PatientDetails *patientObj;
 
+}
 @property NSMutableArray *objects;
+
 
 @end
 
@@ -20,12 +25,71 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    _siteNames = [[NSArray alloc] initWithObjects:@"Yahoo",@"Google",@"Apple",@"eBookFrenzy",nil];
+    
+    patientObj = [[PatientDetails alloc]init];
+    patientObj.usrImg = @"person-man.png";
+    patientObj.usrName = @"Peter";
+    patientObj.gender = @"Male";
+    patientObj.age = @"25 Years Old(06/08/1984)";
+    patientObj.mailId= @"Male";
+    patientObj.primayContactNo= @"eamplame@exapmle.com";
+    patientObj.secondaryContactNo= @"1234567";
+    patientObj.language=@"9876554";
+    patientObj.financialClass= @"Commerical";
+    patientObj.financialPayer= @"Humana";
+    patientObj.nextAppointmentDate = @"09/08/2016";
+    patientObj.appDocName = @"Sam";
+    patientObj.lastAppDate = @"10/08/2017";
+    patientObj.lastVisit = @"OfficeVisit";
+    patientObj.transportation = @"None";
+    patientObj.refDoc =@"Dr.GoldBerg";
+    patientObj.lastSeenDoc=@"Dr.Escobar";
+    patientObj.LastVisitDocAdd = @"Mimai Beach";
+    patientObj.diagonises = @"Paralysis";
+    patientObj.diganosesDate =@"09/02/2013";
+    patientObj.allergies = @"Latex";
+    patientObj.perfPharmacy = @"Address";
+    
+    
+    _patientList = [[NSMutableArray alloc]init];
+    [_patientList addObject:patientObj];
+    
+    patientObj = [[PatientDetails alloc]init];
+    patientObj.usrImg = @"person-man.png";
+    patientObj.usrName = @"Ana";
+    patientObj.gender = @"Female";
+    patientObj.age = @"25 Years Old(06/08/1984)";
+    patientObj.mailId= @"Male";
+    patientObj.primayContactNo= @"eamplame@exapmle.com";
+    patientObj.secondaryContactNo= @"1234567";
+    patientObj.language=@"9876554";
+    patientObj.financialClass= @"Commerical";
+    patientObj.financialPayer= @"Humana";
+    patientObj.nextAppointmentDate = @"09/08/2016";
+    patientObj.appDocName = @"Sam";
+    patientObj.lastAppDate = @"10/08/2017";
+    patientObj.lastVisit = @"OfficeVisit";
+    patientObj.transportation = @"None";
+    patientObj.refDoc =@"Dr.GoldBerg";
+    patientObj.lastSeenDoc=@"Dr.Escobar";
+    patientObj.LastVisitDocAdd = @"Mimai Beach";
+    patientObj.diagonises = @"Paralysis";
+    patientObj.diganosesDate =@"09/02/2013";
+    patientObj.allergies = @"Latex";
+    patientObj.perfPharmacy = @"Address";
+    
+    [_patientList addObject:patientObj];
+    
+    //_patientList = [[NSArray alloc] initWithObjects:@"Yahoo",@"Google",@"Apple",@"eBookFrenzy",nil];
     
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject]
      topViewController];
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+    //[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    [self performSegueWithIdentifier:@"showDetail" sender:self];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -43,9 +107,9 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        NSDate *object = self.objects[indexPath.row];
+        patientObj = _patientList[indexPath.row];
         DetailViewController *controller = (DetailViewController *)[[segue destinationViewController] topViewController];
-        [controller setDetailItem:object];
+        [controller setPatDetails:patientObj];
         controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
         controller.navigationItem.leftItemsSupplementBackButton = YES;
     }
@@ -60,7 +124,7 @@
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section
 {
-    return _siteNames.count;
+    return _patientList.count;
 }
 
 
@@ -78,8 +142,16 @@
     
     //NSDate *object = _objects[indexPath.row];
     //cell.textLabel.text = [object description];
+    patientObj = _patientList[indexPath.row];
+    cell.imageView.backgroundColor = [UIColor colorWithRed:(20.0f/255.0f) green:(173.0f/255.0f) blue:(199.0f/255.0f) alpha:1.0];
+    cell.imageView.layer.masksToBounds = YES;
+    cell.imageView.layer.cornerRadius = 32.0f;
     
-    cell.textLabel.text = _siteNames[indexPath.row];
+    cell.imageView.image=[UIImage imageNamed:patientObj.usrImg];
+    cell.textLabel.text = patientObj.usrName;
+    cell.textLabel.font = [UIFont boldSystemFontOfSize:14.0f];
+    cell.textLabel.textColor= [UIColor colorWithRed:(10.0f/255.0f) green:(173.0f/255.0f) blue:(193.0f/255.0f) alpha:1.0];
+    cell.detailTextLabel.text=patientObj.age;
     return cell;
 }
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
