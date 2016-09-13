@@ -39,31 +39,7 @@
     [self.tableView addSubview:self.refreshControl];
     
     
-    patientObj = [[PatientDetails alloc]init];
-    patientObj.usrImg = @"person-man.png";
-    patientObj.usrName = @"Peter";
-    patientObj.gender = @"Male";
-    patientObj.age = @"25 Years Old(06/08/1984)";
-    patientObj.mailId= @"Male";
-    patientObj.primayContactNo= @"eamplame@exapmle.com";
-    patientObj.secondaryContactNo= @"1234567";
-    patientObj.language=@"9876554";
-    patientObj.financialClass= @"Commerical";
-    patientObj.financialPayer= @"Humana";
-    patientObj.nextAppointmentDate = @"09/08/2016";
-    patientObj.appDocName = @"Sam";
-    patientObj.lastAppDate = @"10/08/2017";
-    patientObj.lastVisit = @"OfficeVisit";
-    patientObj.transportation = @"None";
-    patientObj.refDoc =@"Dr.GoldBerg";
-    patientObj.lastSeenDoc=@"Dr.Escobar";
-    patientObj.LastVisitDocAdd = @"Mimai Beach";
-    patientObj.diagonises = @"Paralysis";
-    patientObj.diganosesDate =@"09/02/2013";
-    patientObj.allergies = @"Latex";
-    patientObj.perfPharmacy = @"Address";
-    [_patientList addObject:patientObj];
-    //_patientList = [[NSArray alloc] initWithObjects:@"Yahoo",@"Google",@"Apple",@"eBookFrenzy",nil];
+        //_patientList = [[NSArray alloc] initWithObjects:@"Yahoo",@"Google",@"Apple",@"eBookFrenzy",nil];
     
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject]
      topViewController];
@@ -89,7 +65,31 @@
 
 
 -(void)getPatientDetails{
-    
+    patientObj = [[PatientDetails alloc]init];
+    patientObj.usrImg = @"person-man.png";
+    patientObj.usrName = @"Peter";
+    patientObj.gender = @"Male";
+    patientObj.age = @"25 Years Old(06/08/1984)";
+    patientObj.mailId= @"Male";
+    patientObj.primayContactNo= @"eamplame@exapmle.com";
+    patientObj.secondaryContactNo= @"1234567";
+    patientObj.language=@"9876554";
+    patientObj.financialClass= @"Commerical";
+    patientObj.financialPayer= @"Humana";
+    patientObj.nextAppointmentDate = @"09/08/2016";
+    patientObj.appDocName = @"Sam";
+    patientObj.lastAppDate = @"10/08/2017";
+    patientObj.lastVisit = @"OfficeVisit";
+    patientObj.transportation = @"None";
+    patientObj.refDoc =@"Dr.GoldBerg";
+    patientObj.lastSeenDoc=@"Dr.Escobar";
+    patientObj.LastVisitDocAdd = @"Mimai Beach";
+    patientObj.diagonises = @"Paralysis";
+    patientObj.diganosesDate =@"09/02/2013";
+    patientObj.allergies = @"Latex";
+    patientObj.perfPharmacy = @"Address";
+    [_patientList addObject:patientObj];
+
     
     patientObj = [[PatientDetails alloc]init];
     patientObj.usrImg = @"person-man.png";
@@ -142,11 +142,13 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        patientObj = _patientList[indexPath.row];
-        DetailViewController *controller = (DetailViewController *)[[segue destinationViewController] topViewController];
-        [controller setPatDetails:patientObj];
-        controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
-        controller.navigationItem.leftItemsSupplementBackButton = YES;
+        if(_patientList.count>0){
+            patientObj = _patientList[indexPath.row];
+            DetailViewController *controller = (DetailViewController *)[[segue destinationViewController] topViewController];
+            [controller setPatDetails:patientObj];
+            controller.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
+            controller.navigationItem.leftItemsSupplementBackButton = YES;
+        }
     }
 }
 
