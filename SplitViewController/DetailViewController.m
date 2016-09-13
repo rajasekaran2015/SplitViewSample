@@ -9,6 +9,7 @@
 #import "DetailViewController.h"
 #import "SplitViewController-Bridging-Header.h"
 #import "PatientDetails.h"
+#import "DateValueFormatter.h"
 
 @interface CubicLineSampleFillFormatter : NSObject <IChartFillFormatter>
 {
@@ -26,7 +27,7 @@
 
 @interface DetailViewController () <ChartViewDelegate>
 
-@property (strong, nonatomic) IBOutlet PieChartView *pieChartView;
+//@property (strong, nonatomic) IBOutlet PieChartView *pieChartView;
 @property (strong, nonatomic) IBOutlet LineChartView *chartView;
 @property (strong, nonatomic) UILabel *imgLbl;
 @end
@@ -42,8 +43,6 @@
         // Update the view.
         [self configureView];
     }
-//    self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModePrimaryOverlay;
-//    [self.splitViewController.displayModeButtonItem action];
 }
 
 - (void)configureView {
@@ -94,10 +93,10 @@
     [self configureView];
     [self setUpLineChartView];
     [self populateChartData];
-    [self setUpPieChartView];
-    [self populatePieChartData];
+//    [self setUpPieChartView];
+//    [self populatePieChartData];
 }
-
+/*
 -(void)setUpPieChartView{
     _pieChartView.delegate = self;
     
@@ -196,11 +195,50 @@
     
     _pieChartView.data = data;
     [_pieChartView highlightValues:nil];
-}
+}*/
 
 -(void)setUpLineChartView{
     _chartView.delegate = self;
     
+    _chartView.descriptionText = @"";
+    _chartView.noDataTextDescription = @"You need to provide data for the chart.";
+    
+    _chartView.dragEnabled = YES;
+    [_chartView setScaleEnabled:YES];
+    _chartView.pinchZoomEnabled = NO;
+    _chartView.drawGridBackgroundEnabled = YES;
+    _chartView.highlightPerDragEnabled = YES;
+    
+    _chartView.backgroundColor = UIColor.whiteColor;
+    
+    _chartView.legend.enabled = YES;
+    
+    ChartXAxis *xAxis = _chartView.xAxis;
+    xAxis.labelPosition = XAxisLabelPositionBottom;
+    xAxis.labelFont = [UIFont fontWithName:@"HelveticaNeue-Light" size:10.f];
+    xAxis.labelTextColor = [UIColor colorWithRed:255/255.0 green:192/255.0 blue:56/255.0 alpha:1.0];
+    xAxis.drawAxisLineEnabled = YES;
+    xAxis.drawGridLinesEnabled = YES;
+    xAxis.centerAxisLabelsEnabled = YES;
+    xAxis.granularity = 3600.0;
+    xAxis.valueFormatter = [[DateValueFormatter alloc] init];
+    
+    ChartYAxis *leftAxis = _chartView.leftAxis;
+    leftAxis.labelPosition = YAxisLabelPositionOutsideChart;
+    leftAxis.labelFont = [UIFont fontWithName:@"HelveticaNeue-Light" size:12.f];
+    leftAxis.labelTextColor = [UIColor colorWithRed:51/255.0 green:181/255.0 blue:229/255.0 alpha:1.0];
+    leftAxis.drawGridLinesEnabled = YES;
+    leftAxis.granularityEnabled = YES;
+    leftAxis.axisMinimum = 0.0;
+    leftAxis.axisMaximum = 170.0;
+    leftAxis.yOffset = -9.0;
+    leftAxis.labelTextColor = [UIColor colorWithRed:255/255.0 green:192/255.0 blue:56/255.0 alpha:1.0];
+    
+    _chartView.rightAxis.enabled = NO;
+    
+    _chartView.legend.form = ChartLegendFormLine;
+    
+    /*
     [_chartView setViewPortOffsetsWithLeft:0.f top:0.f right:0.f bottom:0.f];
     //_chartView.backgroundColor = [UIColor whiteColor];
     //[UIColor colorWithRed:104/255.f green:241/255.f blue:175/255.f alpha:1.f];
@@ -229,9 +267,70 @@
     
     
     [_chartView animateWithXAxisDuration:2.0 yAxisDuration:2.0];
+     */
 }
 
 -(void)populateChartData{
+    
+    NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
+    NSTimeInterval hourSeconds = 3600.0;
+    
+    int count = 5;
+    int range = 100;
+    
+    NSMutableArray *values = [[NSMutableArray alloc] init];
+    
+    NSTimeInterval from = now - (count / 2.0) * hourSeconds;
+    NSTimeInterval to = now + (count / 2.0) * hourSeconds;
+    
+    for (NSTimeInterval x = from; x < to; x += hourSeconds)
+    {
+        double y = arc4random_uniform(range) + 50;
+        [values addObject:[[ChartDataEntry alloc] initWithX:x y:y]];
+    }
+    
+    NSMutableArray *colors = [[NSMutableArray alloc] init];
+    //[colors addObjectsFromArray:ChartColorTemplates.vordiplom];
+    //[colors addObjectsFromArray:ChartColorTemplates.joyful];
+    //[colors addObjectsFromArray:ChartColorTemplates.colorful];
+    //[colors addObjectsFromArray:ChartColorTemplates.liberty];
+    //[colors addObjectsFromArray:ChartColorTemplates.pastel];
+    [colors addObject:[UIColor colorWithRed:0/255.f green:0/255.f blue:0/255.f alpha:1.f]];
+    
+    LineChartDataSet *set1 = nil;
+    if (_chartView.data.dataSetCount > 0)
+    {
+        set1 = (LineChartDataSet *)_chartView.data.dataSets[0];
+        set1.colors = colors;
+        set1.values = values;
+        [_chartView.data notifyDataChanged];
+        [_chartView notifyDataSetChanged];
+    }
+    else
+    {
+        set1 = [[LineChartDataSet alloc] initWithValues:values label:@"DataSet 1"];
+        set1.axisDependency = AxisDependencyLeft;
+        set1.colors = colors;
+        set1.valueTextColor = [UIColor colorWithRed:51/255.0 green:181/255.0 blue:229/255.0 alpha:1.0];
+        set1.lineWidth = 1.5;
+        set1.drawCirclesEnabled = NO;
+        set1.drawValuesEnabled = NO;
+        set1.fillAlpha = 0.26;
+        set1.fillColor = [UIColor colorWithRed:51/255.0 green:181/255.0 blue:229/255.0 alpha:1.0];
+        set1.highlightColor = [UIColor colorWithRed:224/255.0 green:117/255.0 blue:117/255.0 alpha:1.0];
+        set1.drawCircleHoleEnabled = NO;
+        
+        NSMutableArray *dataSets = [[NSMutableArray alloc] init];
+        [dataSets addObject:set1];
+        
+        LineChartData *data = [[LineChartData alloc] initWithDataSets:dataSets];
+        [data setValueTextColor:UIColor.whiteColor];
+        [data setValueFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:9.0]];
+        
+        _chartView.data = data;
+    }
+    
+    /*
     NSMutableArray *yVals1 = [[NSMutableArray alloc] init];
     
     for (int i = 0; i < 10; i++)
@@ -272,6 +371,7 @@
         
         _chartView.data = data;
     }
+     */
 }
 
 - (void)didReceiveMemoryWarning {

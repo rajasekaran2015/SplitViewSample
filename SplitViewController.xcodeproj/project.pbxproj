@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		210F205A1D82955900D20810 /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 210F20531D82955100D20810 /* Charts.framework */; };
 		210F205B1D82955900D20810 /* Charts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 210F20531D82955100D20810 /* Charts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		212888AD1D885FA1006D2815 /* DateValueFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 212888AC1D885FA1006D2815 /* DateValueFormatter.m */; };
+		212888B31D886AA3006D2815 /* MyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 212888B21D886AA2006D2815 /* MyTableViewCell.m */; };
 		21361DAB1D83DC2500074F01 /* PatientDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = 21361DAA1D83DC2500074F01 /* PatientDetails.m */; };
 		2F40C0AA1D812FFF0010CBDD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F40C0A91D812FFF0010CBDD /* main.m */; };
 		2F40C0AD1D812FFF0010CBDD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F40C0AC1D812FFF0010CBDD /* AppDelegate.m */; };
@@ -86,6 +88,10 @@
 /* Begin PBXFileReference section */
 		210F1EDE1D8289E200D20810 /* SplitViewController-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SplitViewController-Bridging-Header.h"; sourceTree = "<group>"; };
 		210F204B1D82955100D20810 /* Charts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Charts.xcodeproj; path = Charts/Charts.xcodeproj; sourceTree = "<group>"; };
+		212888AB1D885FA1006D2815 /* DateValueFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateValueFormatter.h; sourceTree = "<group>"; };
+		212888AC1D885FA1006D2815 /* DateValueFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateValueFormatter.m; sourceTree = "<group>"; };
+		212888B11D886AA2006D2815 /* MyTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyTableViewCell.h; sourceTree = "<group>"; };
+		212888B21D886AA2006D2815 /* MyTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyTableViewCell.m; sourceTree = "<group>"; };
 		21361DA91D83DC2500074F01 /* PatientDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatientDetails.h; sourceTree = "<group>"; };
 		21361DAA1D83DC2500074F01 /* PatientDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PatientDetails.m; sourceTree = "<group>"; };
 		2F40C0A51D812FFF0010CBDD /* SplitViewController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SplitViewController.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -162,6 +168,8 @@
 		2F40C0A71D812FFF0010CBDD /* SplitViewController */ = {
 			isa = PBXGroup;
 			children = (
+				212888AB1D885FA1006D2815 /* DateValueFormatter.h */,
+				212888AC1D885FA1006D2815 /* DateValueFormatter.m */,
 				2F40C0AB1D812FFF0010CBDD /* AppDelegate.h */,
 				2F40C0AC1D812FFF0010CBDD /* AppDelegate.m */,
 				2F40C0AE1D812FFF0010CBDD /* MasterViewController.h */,
@@ -172,6 +180,8 @@
 				2F40C0D31D8142C10010CBDD /* AboutViewController.m */,
 				21361DA91D83DC2500074F01 /* PatientDetails.h */,
 				21361DAA1D83DC2500074F01 /* PatientDetails.m */,
+				212888B11D886AA2006D2815 /* MyTableViewCell.h */,
+				212888B21D886AA2006D2815 /* MyTableViewCell.m */,
 				2F40C0B41D812FFF0010CBDD /* Main.storyboard */,
 				2F40C0B71D812FFF0010CBDD /* Assets.xcassets */,
 				2F40C0D51D8142D00010CBDD /* about.jpg */,
@@ -348,6 +358,8 @@
 				2F40C0D41D8142C10010CBDD /* AboutViewController.m in Sources */,
 				21361DAB1D83DC2500074F01 /* PatientDetails.m in Sources */,
 				2F40C0B01D812FFF0010CBDD /* MasterViewController.m in Sources */,
+				212888AD1D885FA1006D2815 /* DateValueFormatter.m in Sources */,
+				212888B31D886AA3006D2815 /* MyTableViewCell.m in Sources */,
 				2F40C0AA1D812FFF0010CBDD /* main.m in Sources */,
 				2F40C0B31D812FFF0010CBDD /* DetailViewController.m in Sources */,
 			);

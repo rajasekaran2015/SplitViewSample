@@ -21,6 +21,7 @@ public class ChartBaseDataSet: NSObject, IChartDataSet
         
         // default color
         colors.append(NSUIColor(red: 140.0/255.0, green: 234.0/255.0, blue: 255.0/255.0, alpha: 1.0))
+        
         valueColors.append(NSUIColor.blackColor())
     }
     
@@ -29,7 +30,8 @@ public class ChartBaseDataSet: NSObject, IChartDataSet
         super.init()
         
         // default color
-        colors.append(NSUIColor(red: 140.0/255.0, green: 234.0/255.0, blue: 255.0/255.0, alpha: 1.0))
+        //colors.append(NSUIColor(red: 140.0/255.0, green: 234.0/255.0, blue: 255.0/255.0, alpha: 1.0))
+        colors.append(NSUIColor(red: 237.0/255.0, green: 7.0/255.0, blue: 137.0/255.0, alpha: 1.0))
         valueColors.append(NSUIColor.blackColor())
         
         self.label = label

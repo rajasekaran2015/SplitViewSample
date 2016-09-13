@@ -9,6 +9,7 @@
 #import "MasterViewController.h"
 #import "DetailViewController.h"
 #import "PatientDetails.h"
+#import "MyTableViewCell.h"
 
 @interface MasterViewController ()
 {
@@ -16,7 +17,7 @@
 
 }
 @property NSMutableArray *objects;
-
+@property UIRefreshControl *refreshControl;
 
 @end
 
@@ -25,6 +26,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    _patientList = [[NSMutableArray alloc]init];
+    
+    // Initialize the refresh control.
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    self.refreshControl.backgroundColor = [UIColor purpleColor];
+    self.refreshControl.tintColor = [UIColor whiteColor];
+    [self.refreshControl addTarget:self
+                            action:@selector(getPatientDetails)
+                  forControlEvents:UIControlEventValueChanged];
+    [self.tableView addSubview:self.refreshControl];
+    
     
     patientObj = [[PatientDetails alloc]init];
     patientObj.usrImg = @"person-man.png";
@@ -49,14 +62,38 @@
     patientObj.diganosesDate =@"09/02/2013";
     patientObj.allergies = @"Latex";
     patientObj.perfPharmacy = @"Address";
-    
-    
-    _patientList = [[NSMutableArray alloc]init];
     [_patientList addObject:patientObj];
+    //_patientList = [[NSArray alloc] initWithObjects:@"Yahoo",@"Google",@"Apple",@"eBookFrenzy",nil];
+    
+    self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject]
+     topViewController];
+    
+    self.navigationItem.leftBarButtonItem = self.editButtonItem;
+    self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
+    
+    //[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    [self performSegueWithIdentifier:@"showDetail" sender:self];
+
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    self.clearsSelectionOnViewWillAppear = self.splitViewController.isCollapsed;
+    [super viewWillAppear:animated];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+-(void)getPatientDetails{
+    
     
     patientObj = [[PatientDetails alloc]init];
     patientObj.usrImg = @"person-man.png";
-    patientObj.usrName = @"Ana";
+    patientObj.usrName = [NSString stringWithFormat:@"Ana %i",_patientList.count];
     patientObj.gender = @"Female";
     patientObj.age = @"25 Years Old(06/08/1984)";
     patientObj.mailId= @"Male";
@@ -77,29 +114,27 @@
     patientObj.diganosesDate =@"09/02/2013";
     patientObj.allergies = @"Latex";
     patientObj.perfPharmacy = @"Address";
-    
     [_patientList addObject:patientObj];
-    
-    //_patientList = [[NSArray alloc] initWithObjects:@"Yahoo",@"Google",@"Apple",@"eBookFrenzy",nil];
-    
-    self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject]
-     topViewController];
-    self.navigationItem.leftBarButtonItem = self.editButtonItem;
-    self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
-    //[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    [self performSegueWithIdentifier:@"showDetail" sender:self];
-
+    [self performSelector:@selector(hideRefreshViewControl) withObject:nil afterDelay:3.0];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    self.clearsSelectionOnViewWillAppear = self.splitViewController.isCollapsed;
-    [super viewWillAppear:animated];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+-(void)hideRefreshViewControl{
+    
+    [self.tableView reloadData];
+    
+    // End the refreshing
+    if (self.refreshControl) {
+        
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"MMM d, h:mm a"];
+        NSString *title = [NSString stringWithFormat:@"Last update: %@", [formatter stringFromDate:[NSDate date]]];
+        NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObject:[UIColor whiteColor]
+                                                                    forKey:NSForegroundColorAttributeName];
+        NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attrsDictionary];
+        self.refreshControl.attributedTitle = attributedTitle;
+        
+        [self.refreshControl endRefreshing];
+    }
 }
 
 #pragma mark - Segues
@@ -116,11 +151,40 @@
 }
 
 #pragma mark - Table View
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    // Return the number of sections.
+    if (_patientList.count > 0) {
+        
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        return 1;
+        
+    } else {
+        
+        // Display a message when the table is empty
+        UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
+        
+        messageLabel.text = @"No data is currently available. Please pull down to refresh.";
+        messageLabel.textColor = [UIColor blackColor];
+        messageLabel.numberOfLines = 0;
+        messageLabel.textAlignment = NSTextAlignmentCenter;
+        messageLabel.font = [UIFont fontWithName:@"Palatino-Italic" size:20];
+        [messageLabel sizeToFit];
+        
+        self.tableView.backgroundView = messageLabel;
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        
+    }
+    
+    return 0;
+}
+/*
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 1;
 }
-
+*/
 - (NSInteger)tableView:(UITableView *)tableView
  numberOfRowsInSection:(NSInteger)section
 {
@@ -132,10 +196,10 @@
 {
     static NSString *CellIdentifier = @"Cell";
     
-    UITableViewCell *cell = [tableView
+    MyTableViewCell *cell = [tableView
                              dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc]
+        cell = [[MyTableViewCell alloc]
                 initWithStyle:UITableViewCellStyleDefault
                 reuseIdentifier:CellIdentifier];
     }
@@ -143,15 +207,25 @@
     //NSDate *object = _objects[indexPath.row];
     //cell.textLabel.text = [object description];
     patientObj = _patientList[indexPath.row];
-    cell.imageView.backgroundColor = [UIColor colorWithRed:(20.0f/255.0f) green:(173.0f/255.0f) blue:(199.0f/255.0f) alpha:1.0];
-    cell.imageView.layer.masksToBounds = YES;
-    cell.imageView.layer.cornerRadius = 32.0f;
     
-    cell.imageView.image=[UIImage imageNamed:patientObj.usrImg];
-    cell.textLabel.text = patientObj.usrName;
-    cell.textLabel.font = [UIFont boldSystemFontOfSize:14.0f];
-    cell.textLabel.textColor= [UIColor colorWithRed:(10.0f/255.0f) green:(173.0f/255.0f) blue:(193.0f/255.0f) alpha:1.0];
-    cell.detailTextLabel.text=patientObj.age;
+    UIImage *cellImage = [UIImage imageNamed:patientObj.usrImg];
+    cell.imgView.image = cellImage;
+    
+//    CGFloat widthScale = cellImage.size.width / cell.frame.size.width;
+//    CGFloat heightScale = cellImage.size.height / cell.frame.size.height;
+    //this line will do it!
+    //cell.imgView.transform = CGAffineTransformMakeScale(0.5, 0.5);
+    
+    
+    cell.imgView.backgroundColor = [UIColor colorWithRed:(20.0f/255.0f) green:(173.0f/255.0f) blue:(199.0f/255.0f) alpha:1.0];
+    cell.imgView.layer.masksToBounds = YES;
+    cell.imgView.layer.cornerRadius = 32.0f;
+    
+    cell.nameLbl.text = patientObj.usrName;
+    cell.nameLbl.font = [UIFont boldSystemFontOfSize:14.0f];
+    cell.nameLbl.textColor= [UIColor colorWithRed:(10.0f/255.0f) green:(173.0f/255.0f) blue:(193.0f/255.0f) alpha:1.0];
+    cell.ageLbl.text=patientObj.age;
+    cell.genderLbl.text=patientObj.gender;
     return cell;
 }
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -165,6 +239,12 @@
 //    NSURL *url = [NSURL URLWithString:urlString];
 //    NSURLRequest *request = [NSURLRequest requestWithURL:url];
 //    [self.detailViewController.webView loadRequest:request];
+    
+    self.splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModePrimaryHidden;
+    UINavigationController *navigationController = [self.splitViewController.viewControllers lastObject];
+    navigationController.topViewController.navigationItem.leftBarButtonItem = self.splitViewController.displayModeButtonItem;
+    
+    
 }
 
 
